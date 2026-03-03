@@ -2,144 +2,837 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quản Lý Điểm Danh</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#4f8dfd,#1e3a8a);
-    color:white;
-    text-align:center;
-    margin:0;
-}
-.container{
-    margin-top:40px;
-}
-button{
-    padding:8px 15px;
-    margin:5px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-}
-.add-btn{ background:#10b981; color:white; }
-.delete-btn{ background:#ef4444; color:white; }
-.admin-panel{ margin-top:20px; }
-.month-box{
-    background:rgba(255,255,255,0.1);
-    padding:20px;
-    margin:20px auto;
-    width:400px;
-    border-radius:12px;
-}
-input{
-    width:90%;
-    padding:6px;
-    margin:4px 0;
-    border-radius:6px;
-    border:none;
-}
-a.button{
-    display:block;
-    margin:6px auto;
-    padding:10px;
-    background:white;
-    color:#1e3a8a;
-    text-decoration:none;
-    border-radius:8px;
-    font-weight:bold;
-}
-.hidden{ display:none; }
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #1a2438;
+    --border: rgba(255,255,255,0.07);
+    --accent: #3b82f6;
+    --accent2: #06b6d4;
+    --danger: #ef4444;
+    --success: #10b981;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --card-glow: rgba(59,130,246,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(10,15,30,0.8);
+    backdrop-filter: blur(12px);
+  }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 18px rgba(59,130,246,0.4);
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  header span {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .header-badge {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent2);
+    background: rgba(6,182,212,0.1);
+    border: 1px solid rgba(6,182,212,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* ─── MAIN ─── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ─── LOGIN ─── */
+  #loginBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 74px);
+    gap: 0;
+    animation: fadeUp 0.5s ease;
+  }
+
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 44px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+  }
+
+  .login-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(6,182,212,0.1));
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 24px;
+  }
+
+  .login-card h2 {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .login-card p {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 28px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 13px 16px 13px 44px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .input-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+
+  .input-group input::placeholder { color: var(--muted); }
+
+  .input-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(59,130,246,0.4);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  #loginError {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 8px;
+    color: #fca5a5;
+    font-size: 0.82rem;
+    text-align: center;
+    display: none;
+  }
+
+  /* ─── ADMIN PANEL ─── */
+  #adminPanel { animation: fadeUp 0.4s ease; }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .panel-title h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+
+  .panel-title p {
+    color: var(--muted);
+    font-size: 0.83rem;
+    margin-top: 2px;
+  }
+
+  .btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: linear-gradient(135deg, var(--success), #059669);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+  }
+
+  .btn-add:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(16,185,129,0.4);
+  }
+
+  .btn-logout {
+    padding: 9px 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.83rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-logout:hover {
+    border-color: rgba(255,255,255,0.2);
+    color: var(--text);
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 0.9rem; margin-top: 6px; }
+
+  /* ─── MONTH CARD ─── */
+  .month-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .month-card:hover {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(59,130,246,0.1);
+  }
+
+  .month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .month-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .month-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 8px rgba(59,130,246,0.5);
+  }
+
+  .month-label {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .month-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    background: rgba(6,182,212,0.1);
+    border: 1px solid rgba(6,182,212,0.15);
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  .btn-delete {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 8px;
+    color: #f87171;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-delete:hover {
+    background: rgba(239,68,68,0.15);
+    border-color: rgba(239,68,68,0.3);
+  }
+
+  .grade-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .grade-row {
+    background: var(--surface);
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .grade-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .grade-label .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .grade-input-wrap {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .grade-input-wrap input {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.8rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-width: 0;
+  }
+
+  .grade-input-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.12);
+  }
+
+  .grade-input-wrap input::placeholder { color: rgba(100,116,139,0.6); font-size: 0.76rem; }
+
+  .btn-open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 7px;
+    color: var(--accent);
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-open:hover {
+    background: rgba(59,130,246,0.2);
+    border-color: rgba(59,130,246,0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-open.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    animation: scaleIn 0.25s ease;
+  }
+
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--success), #06b6d4, transparent);
+    border-radius: 18px 18px 0 0;
+  }
+
+  .modal h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .modal p {
+    color: var(--muted);
+    font-size: 0.83rem;
+    margin-bottom: 22px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--muted);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel:hover { color: var(--text); }
+
+  .btn-confirm {
+    flex: 1;
+    padding: 11px;
+    background: linear-gradient(135deg, var(--success), #059669);
+    border: none;
+    border-radius: 9px;
+    color: white;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-confirm:hover { opacity: 0.9; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .hidden { display: none !important; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 580px) {
+    header { padding: 16px 18px; }
+    main { padding: 24px 14px 60px; }
+    .grade-grid { grid-template-columns: 1fr; }
+    .panel-header { flex-direction: column; align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
 
-<div class="container">
-<h1>📊 Hệ Thống Điểm Danh</h1>
+<header>
+  <div class="logo-icon">📊</div>
+  <div>
+    <h1>Hệ Thống Điểm Danh</h1>
+    <span>Quản lý liên kết điểm danh theo tháng</span>
+  </div>
+  <div class="header-badge">v2.0</div>
+</header>
 
-<div id="loginBox">
-<input type="password" id="adminPass" placeholder="Nhập mật khẩu quản trị">
-<button onclick="login()">Đăng nhập</button>
+<main>
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <div class="login-card">
+      <div class="login-icon">🔐</div>
+      <h2>Đăng nhập quản trị</h2>
+      <p>Nhập mật khẩu để truy cập bảng quản lý điểm danh</p>
+      <div class="input-group">
+        <span class="input-icon">🔑</span>
+        <input type="password" id="adminPass" placeholder="Mật khẩu quản trị viên"
+          onkeydown="if(event.key==='Enter') login()">
+      </div>
+      <button class="btn-primary" onclick="login()">Đăng nhập</button>
+      <div id="loginError">❌ Mật khẩu không đúng, vui lòng thử lại.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="hidden">
+    <div class="panel-header">
+      <div class="panel-title">
+        <h2>Quản lý tháng</h2>
+        <p id="monthCount">Đang tải dữ liệu...</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button class="btn-logout" onclick="logout()">↩ Đăng xuất</button>
+        <button class="btn-add" onclick="openAddModal()">
+          <span>＋</span> Thêm tháng mới
+        </button>
+      </div>
+    </div>
+    <div id="months"></div>
+  </div>
+</main>
+
+<!-- MODAL: Thêm tháng -->
+<div id="addModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>📅 Thêm tháng mới</h3>
+    <p>Nhập tháng theo định dạng MM/YYYY</p>
+    <div class="input-group">
+      <span class="input-icon">📅</span>
+      <input type="text" id="monthInput" placeholder="Ví dụ: 04/2026" maxlength="7"
+        onkeydown="if(event.key==='Enter') confirmAddMonth()" style="width:100%;padding:13px 16px 13px 44px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAddModal()">Hủy</button>
+      <button class="btn-confirm" onclick="confirmAddMonth()">Thêm tháng</button>
+    </div>
+  </div>
 </div>
 
-<div id="adminPanel" class="hidden">
-<button class="add-btn" onclick="addMonth()">➕ Thêm Tháng</button>
-<div id="months"></div>
-</div>
-
+<!-- MODAL: Xác nhận xóa -->
+<div id="deleteModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>🗑 Xác nhận xóa</h3>
+    <p>Bạn có chắc muốn xóa tháng <strong id="deleteMonthName" style="color:var(--text)"></strong>? Hành động này không thể hoàn tác.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+      <button class="btn-confirm" style="background:linear-gradient(135deg,var(--danger),#dc2626);" onclick="confirmDelete()">Xóa</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const PASSWORD = "123456"; // 🔐 ĐỔI MẬT KHẨU Ở ĐÂY
+  const PASSWORD = "123456"; // 🔐 ĐỔI MẬT KHẨU Ở ĐÂY
 
-let data = JSON.parse(localStorage.getItem("attendanceData")) || [];
+  const GRADES = [
+    { key: "k67",  label: "Khối 6 & 7", icon: "📚" },
+    { key: "k8",   label: "Khối 8",     icon: "📖" },
+    { key: "k9",   label: "Khối 9",     icon: "📝" },
+    { key: "k10",  label: "Khối 10",    icon: "🎓" },
+    { key: "k11",  label: "Khối 11",    icon: "🏫" },
+    { key: "k12",  label: "Khối 12",    icon: "🎯" },
+    { key: "clb",  label: "CLB",        icon: "🌟" },
+  ];
 
-function saveData(){
-    localStorage.setItem("attendanceData", JSON.stringify(data));
-}
+  let data = [];
+  let pendingDeleteIndex = null;
 
-function login(){
-    let pass = document.getElementById("adminPass").value;
-    if(pass === PASSWORD){
-        document.getElementById("loginBox").classList.add("hidden");
-        document.getElementById("adminPanel").classList.remove("hidden");
-        render();
-    }else{
-        alert("Sai mật khẩu!");
+  // ── Storage helpers ──
+  function saveData() {
+    localStorage.setItem("attendanceData_v2", JSON.stringify(data));
+  }
+
+  function loadData() {
+    const raw = localStorage.getItem("attendanceData_v2");
+    if (raw) return JSON.parse(raw);
+    // Migrate old format
+    const old = localStorage.getItem("attendanceData");
+    if (old) return JSON.parse(old);
+    return [];
+  }
+
+  // ── Auth ──
+  function login() {
+    const pass = document.getElementById("adminPass").value;
+    const err  = document.getElementById("loginError");
+    if (pass === PASSWORD) {
+      data = loadData();
+      document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("adminPanel").classList.remove("hidden");
+      render();
+    } else {
+      err.style.display = "block";
+      document.getElementById("adminPass").value = "";
     }
-}
+  }
 
-function addMonth(){
-    let name = prompt("Nhập tháng (vd: 04/2026)");
-    if(!name) return;
-    data.unshift({name:name, links:{}});
+  function logout() {
+    document.getElementById("adminPanel").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+    document.getElementById("adminPass").value = "";
+    document.getElementById("loginError").style.display = "none";
+  }
+
+  // ── Modal: Add month ──
+  function openAddModal() {
+    document.getElementById("monthInput").value = "";
+    document.getElementById("addModal").classList.remove("hidden");
+    setTimeout(() => document.getElementById("monthInput").focus(), 80);
+  }
+
+  function closeAddModal() {
+    document.getElementById("addModal").classList.add("hidden");
+  }
+
+  function confirmAddMonth() {
+    const val = document.getElementById("monthInput").value.trim();
+    if (!val) return;
+    data.unshift({ name: val, links: {} });
     saveData();
+    closeAddModal();
     render();
-}
+  }
 
-function deleteMonth(index){
-    if(confirm("Xóa tháng này?")){
-        data.splice(index,1);
-        saveData();
-        render();
+  // ── Modal: Delete month ──
+  function openDeleteModal(index) {
+    pendingDeleteIndex = index;
+    document.getElementById("deleteMonthName").textContent = "Tháng " + data[index].name;
+    document.getElementById("deleteModal").classList.remove("hidden");
+  }
+
+  function closeDeleteModal() {
+    document.getElementById("deleteModal").classList.add("hidden");
+    pendingDeleteIndex = null;
+  }
+
+  function confirmDelete() {
+    if (pendingDeleteIndex === null) return;
+    data.splice(pendingDeleteIndex, 1);
+    saveData();
+    closeDeleteModal();
+    render();
+  }
+
+  // ── Render ──
+  function render() {
+    const container = document.getElementById("months");
+    const countEl   = document.getElementById("monthCount");
+
+    countEl.textContent = data.length === 0
+      ? "Chưa có tháng nào được thêm"
+      : `${data.length} tháng · ${countLinks()} liên kết`;
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <h3 style="font-size:1rem;color:var(--text);">Chưa có tháng nào</h3>
+          <p>Nhấn "Thêm tháng mới" để bắt đầu quản lý điểm danh</p>
+        </div>`;
+      return;
     }
-}
 
-function updateLink(index,key,value){
+    container.innerHTML = data.map((month, i) => {
+      const filled = GRADES.filter(g => month.links[g.key]).length;
+      return `
+      <div class="month-card">
+        <div class="month-header">
+          <div class="month-title">
+            <div class="month-dot"></div>
+            <span class="month-label">Tháng ${month.name}</span>
+            <span class="month-count">${filled}/${GRADES.length} liên kết</span>
+          </div>
+          <button class="btn-delete" onclick="openDeleteModal(${i})">🗑 Xóa</button>
+        </div>
+        <div class="grade-grid">
+          ${GRADES.map(g => {
+            const val = month.links[g.key] || "";
+            const hasLink = val.trim() !== "";
+            return `
+            <div class="grade-row">
+              <div class="grade-label"><div class="dot"></div>${g.icon} ${g.label}</div>
+              <div class="grade-input-wrap">
+                <input
+                  type="url"
+                  placeholder="Dán link điểm danh..."
+                  value="${escHtml(val)}"
+                  oninput="updateLink(${i},'${g.key}',this.value)"
+                >
+                <a href="${hasLink ? escHtml(val) : '#'}"
+                   target="_blank"
+                   class="btn-open ${hasLink ? '' : 'disabled'}"
+                   title="${hasLink ? 'Mở liên kết' : 'Chưa có liên kết'}"
+                >↗</a>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function updateLink(index, key, value) {
     data[index].links[key] = value;
     saveData();
-    render();
-}
+    // Update count badge without full re-render
+    const cards = document.querySelectorAll(".month-card");
+    if (cards[index]) {
+      const filled = GRADES.filter(g => data[index].links[g.key]).length;
+      const badge  = cards[index].querySelector(".month-count");
+      if (badge) badge.textContent = `${filled}/${GRADES.length} liên kết`;
+    }
+    document.getElementById("monthCount").textContent =
+      `${data.length} tháng · ${countLinks()} liên kết`;
+  }
 
-function render(){
-    let container = document.getElementById("months");
-    container.innerHTML="";
-    data.forEach((month, index)=>{
-        let div = document.createElement("div");
-        div.className="month-box";
-        div.innerHTML = `
-        <h2>Tháng ${month.name}</h2>
-        ${createInput(index,"k67","Khối 6 & 7")}
-        ${createInput(index,"k8","Khối 8")}
-        ${createInput(index,"k9","Khối 9")}
-        ${createInput(index,"k10","Khối 10")}
-        ${createInput(index,"k11","Khối 11")}
-        ${createInput(index,"k12","Khối 12")}
-        ${createInput(index,"clb","CLB")}
-        <button class="delete-btn" onclick="deleteMonth(${index})">Xóa Tháng</button>
-        `;
-        container.appendChild(div);
-    });
-}
+  function countLinks() {
+    return data.reduce((acc, m) => acc + GRADES.filter(g => m.links[g.key]).length, 0);
+  }
 
-function createInput(index,key,label){
-    let value = data[index].links[key] || "";
-    return `
-    <input placeholder="Link ${label}" value="${value}"
-    onchange="updateLink(${index},'${key}',this.value)">
-    <a class="button" href="${value}" target="_blank">${label}</a>
-    `;
-}
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Close modals on overlay click
+  document.getElementById("addModal").addEventListener("click", e => {
+    if (e.target === document.getElementById("addModal")) closeAddModal();
+  });
+  document.getElementById("deleteModal").addEventListener("click", e => {
+    if (e.target === document.getElementById("deleteModal")) closeDeleteModal();
+  });
 </script>
-
 </body>
 </html>
